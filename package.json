@@ -1,0 +1,24 @@
+{
+  "name": "town-crier",
+  "main": "./lib/main",
+  "version": "0.1.0",
+  "description": "Submits bug reports to the Atom project",
+  "keywords": [
+    "bug",
+    "report"
+  ],
+  "repository": "https://github.com/atom/town-crier",
+  "license": "MIT",
+  "engines": {
+    "atom": ">=1.19.0 <2.0.0"
+  },
+  "dependencies": {
+    "etch": "^0.12.4",
+    "temp": "^0.8.3"
+  },
+  "devDependencies": {
+    "atom-mocha-test-runner": "^1.0.1",
+    "chai": "^4.0.2"
+  },
+  "atomTestRunner": "./spec/runner"
+}
