@@ -1,6 +1,6 @@
 # Town Crier
 
-An Atom package that makes submitting bug reports to Atom or any Atom package very simple.
+A simple way to submit feedback to Atom or any package.
 
 ## License
 
