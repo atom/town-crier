@@ -20,5 +20,8 @@
     "atom-mocha-test-runner": "^1.0.1",
     "chai": "^4.0.2"
   },
-  "atomTestRunner": "./spec/runner"
+  "atomTestRunner": "./spec/runner",
+  "deserializers": {
+    "BugReport": "deserializeBugReport"
+  }
 }
