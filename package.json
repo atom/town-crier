@@ -5,7 +5,8 @@
   "description": "A simple way to submit feedback to Atom or any package",
   "keywords": [
     "bug",
-    "report"
+    "report",
+    "issues"
   ],
   "repository": "https://github.com/atom/town-crier",
   "license": "MIT",
