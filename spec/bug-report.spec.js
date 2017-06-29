@@ -21,7 +21,8 @@ describe('BugReport', function () {
       expect(report.atomVersion).to.equal('')
       expect(report.apmVersion).to.equal('')
       expect(report.osVersion).to.equal('')
-      expect(report.additionalInformation).to.equal('')
+      expect(report.additionalInformation.text).to.equal('')
+      expect(report.additionalInformation.packageList).to.deep.equal(report.packageList)
     })
 
     it('copies the values to the fields when deserializing', function () {
