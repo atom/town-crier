@@ -33,7 +33,9 @@ describe('BugReport', function () {
         reproSteps: ['foo', 'bar', 'baz'],
         expectedResult: 'Nothing bad',
         actualResult: 'Something bad',
-        additionalInformation: 'Something helpful'
+        additionalInformation: {
+          text: 'Something helpful'
+        }
       })
 
       expect(report.title).to.equal('foo')
@@ -42,7 +44,8 @@ describe('BugReport', function () {
       expect(report.reproSteps).to.deep.equal(['foo', 'bar', 'baz'])
       expect(report.expectedResult).to.equal('Nothing bad')
       expect(report.actualResult).to.equal('Something bad')
-      expect(report.additionalInformation).to.equal('Something helpful')
+      expect(report.additionalInformation.text).to.equal('Something helpful')
+      expect(report.additionalInformation.packageList).to.deep.equal(report.packageList)
     })
   })
 
