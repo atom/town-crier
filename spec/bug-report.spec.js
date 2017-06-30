@@ -122,4 +122,179 @@ describe('BugReport', function () {
       expect(report.reproSteps).to.deep.equal(['bar', 'baz'])
     })
   })
+
+  describe('renderReport', function () {
+    let rendered
+
+    describe('empty report', function () {
+      beforeEach(function () {
+        report = new BugReport()
+      })
+
+      describe('with no header', function () {
+        beforeEach(function () {
+          rendered = report.renderReport()
+        })
+
+        it('has only whitespace before the repro steps section', function () {
+          expect(rendered).to.match(/^\s+## Steps to Reproduce/)
+        })
+
+        it('has only whitespace between the steps to reproduce header and expected behavior', function () {
+          expect(rendered).to.match(/## Steps to Reproduce\s+\*\*Expected:\*\*/)
+        })
+
+        it('has the default text for expected', function () {
+          expect(rendered).to.match(/\*\*Expected:\*\* None entered/)
+        })
+
+        it('has the default text for actual', function () {
+          expect(rendered).to.match(/\*\*Actual:\*\* None entered/)
+        })
+
+        it('has only whitespace between the additional information header and the first details section', function () {
+          expect(rendered).to.match(/## Additional Info\s+<details>/)
+        })
+
+        it('contains the installed packages section', function () {
+          expect(rendered).to.match(/<summary>Installed Packages<\/summary>/)
+        })
+
+        it('contains the town-crier version comment', function () {
+          expect(rendered).to.match(/<!-- Created by town-crier v\d+\.\d+\.\d+ -->/)
+        })
+      })
+
+      describe('with header', function () {
+        beforeEach(function () {
+          rendered = report.renderReport({withHeader: true})
+        })
+
+        it('includes default text for the selected package', function () {
+          expect(rendered).to.match(/\*\*For package:\*\* No package selected/)
+        })
+
+        it('includes the bug title', function () {
+          expect(rendered).to.match(/# Untitled Bug Report/)
+        })
+
+        it('has only whitespace between the steps to reproduce header and expected behavior', function () {
+          expect(rendered).to.match(/## Steps to Reproduce\s+\*\*Expected:\*\*/)
+        })
+
+        it('has the default text for expected', function () {
+          expect(rendered).to.match(/\*\*Expected:\*\* None entered/)
+        })
+
+        it('has the default text for actual', function () {
+          expect(rendered).to.match(/\*\*Actual:\*\* None entered/)
+        })
+
+        it('has only whitespace between the additional information header and the first details section', function () {
+          expect(rendered).to.match(/## Additional Info\s+<details>/)
+        })
+
+        it('contains the installed packages section', function () {
+          expect(rendered).to.match(/<summary>Installed Packages<\/summary>/)
+        })
+
+        it('contains the town-crier version comment', function () {
+          expect(rendered).to.match(/<!-- Created by town-crier v\d+\.\d+\.\d+ -->/)
+        })
+      })
+    })
+
+    describe('populated report', function () {
+      beforeEach(function () {
+        report = new BugReport({
+          title: 'Title',
+          description: 'Description',
+          forPackage: 'atom',
+          expectedResult: 'Expected',
+          actualResult: 'Actual',
+          reproSteps: ['one', 'two', 'three'],
+          additionalInformation: {
+            text: 'Additional information',
+            packageList: []
+          }
+        })
+      })
+
+      describe('without header', function () {
+        beforeEach(function () {
+          rendered = report.renderReport()
+        })
+
+        it('contains the description before the repro steps section', function () {
+          expect(rendered).to.match(/Description\s+## Steps to Reproduce/)
+        })
+
+        it('contains the repro steps before the expected result', function () {
+          expect(rendered).to.match(/## Steps to Reproduce\s+1\. one\n1\. two\n1\. three\s+\*\*Expected:\*\*/)
+        })
+
+        it('has the proper text for expected', function () {
+          expect(rendered).to.match(/\*\*Expected:\*\* Expected/)
+        })
+
+        it('has the proper text for actual', function () {
+          expect(rendered).to.match(/\*\*Actual:\*\* Actual/)
+        })
+
+        it('has the proper text between the additional information header and the first details section', function () {
+          expect(rendered).to.match(/## Additional Info\s+Additional information\s+<details>/)
+        })
+
+        it('contains the installed packages section', function () {
+          expect(rendered).to.match(/<summary>Installed Packages<\/summary>/)
+        })
+
+        it('contains the town-crier version comment', function () {
+          expect(rendered).to.match(/<!-- Created by town-crier v\d+\.\d+\.\d+ -->/)
+        })
+      })
+
+      describe('with header', function () {
+        beforeEach(function () {
+          rendered = report.renderReport({withHeader: true})
+        })
+
+        it('contains the named package', function () {
+          expect(rendered).to.match(/\*\*For package:\*\* atom/)
+        })
+
+        it('contains the bug title', function () {
+          expect(rendered).to.match(/# Title/)
+        })
+
+        it('contains the description before the repro steps section', function () {
+          expect(rendered).to.match(/Description\s+## Steps to Reproduce/)
+        })
+
+        it('contains the repro steps before the expected result', function () {
+          expect(rendered).to.match(/## Steps to Reproduce\s+1\. one\n1\. two\n1\. three\s+\*\*Expected:\*\*/)
+        })
+
+        it('has the proper text for expected', function () {
+          expect(rendered).to.match(/\*\*Expected:\*\* Expected/)
+        })
+
+        it('has the proper text for actual', function () {
+          expect(rendered).to.match(/\*\*Actual:\*\* Actual/)
+        })
+
+        it('has the proper text between the additional information header and the first details section', function () {
+          expect(rendered).to.match(/## Additional Info\s+Additional information\s+<details>/)
+        })
+
+        it('contains the installed packages section', function () {
+          expect(rendered).to.match(/<summary>Installed Packages<\/summary>/)
+        })
+
+        it('contains the town-crier version comment', function () {
+          expect(rendered).to.match(/<!-- Created by town-crier v\d+\.\d+\.\d+ -->/)
+        })
+      })
+    })
+  })
 })
