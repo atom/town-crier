@@ -99,4 +99,27 @@ describe('BugReport', function () {
       expect(report.spinnerClass).to.equal('inline-block hidden')
     })
   })
+
+  describe('reproSteps', function () {
+    beforeEach(function () {
+      report = new BugReport()
+    })
+
+    it('adds a repro step when addReproStep is called', function () {
+      expect(report.reproSteps.length).to.equal(3)
+
+      report.addReproStep()
+
+      expect(report.reproSteps.length).to.equal(4)
+      expect(report.reproSteps[3]).to.equal('')
+    })
+
+    it('removes a repro step when removeReproStep is called', function () {
+      report.reproSteps = ['foo', 'bar', 'baz']
+
+      report.removeReproStep(0)
+
+      expect(report.reproSteps).to.deep.equal(['bar', 'baz'])
+    })
+  })
 })
