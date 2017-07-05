@@ -75,10 +75,35 @@ describe('BugReport', function () {
     })
 
     it('is valid when the title, description, package and osVersion are not blank', async function () {
-      report = new BugReport({title: 'foo', description: 'bar', forPackage: 'baz'})
-      await report.populateVersions()
+      report = new BugReport({
+        title: 'foo',
+        description: 'bar',
+        forPackage: 'baz',
+        osVersion: 'Mac OS X 10.12.5'
+      })
 
       expect(report.isValid()).to.be.true
+    })
+  })
+
+  describe('serialization', function () {
+    let state
+
+    beforeEach(function () {
+      report = new BugReport({atomVersion: 'foo', apmVersion: 'bar', osVersion: 'baz'})
+      state = report.serialize()
+    })
+
+    it('does not serialize the atom version information', function () {
+      expect(state.data.atomVersion).to.not.exist
+    })
+
+    it('does not serialize the apm version information', function () {
+      expect(state.data.apmVersion).to.not.exist
+    })
+
+    it('does not serialize the os version information', function () {
+      expect(state.data.osVersion).to.not.exist
     })
   })
 
