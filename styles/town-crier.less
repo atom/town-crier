@@ -11,6 +11,12 @@
     font-weight: bold;
   }
 
+  select:focus {
+    outline: none;
+    border-color: @background-color-info;
+    box-shadow: 0 0 0 1px @background-color-info;
+  }
+
   &.pane-item {
     overflow-y: auto;
   }
@@ -19,9 +25,14 @@
     display: none;
   }
 
-  select:focus {
-    outline: none;
-    border-color: @background-color-info;
-    box-shadow: 0 0 0 1px @background-color-info;
+  .required {
+    label::after {
+      content: ' *';
+      color: @text-color-warning;
+    }
+  }
+
+  .required-star {
+    color: @text-color-warning;
   }
 }
