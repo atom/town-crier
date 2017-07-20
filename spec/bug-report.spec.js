@@ -1,6 +1,7 @@
 /** @babel */
 
 const expect = require('chai').expect
+import sinon from 'sinon'
 
 import BugReport from '../lib/bug-report'
 
@@ -8,6 +9,17 @@ describe('BugReport', function () {
   let report
 
   describe('constructor', function () {
+    let devModeStub
+
+    beforeEach(function () {
+      devModeStub = sinon.stub(atom, 'inDevMode')
+      devModeStub.returns(false)
+    })
+
+    afterEach(function () {
+      devModeStub.restore()
+    })
+
     it('initializes fields to blank values when not deserializing', function () {
       report = new BugReport()
 
@@ -21,6 +33,7 @@ describe('BugReport', function () {
       expect(report.atomVersion).to.equal('')
       expect(report.apmVersion).to.equal('')
       expect(report.osVersion).to.equal('')
+      expect(report.packageList).to.deep.equal(atom.packages.getAvailablePackageNames())
       expect(report.additionalInformation.text).to.equal('')
       expect(report.additionalInformation.packageList).to.deep.equal(report.packageList)
     })
@@ -46,6 +59,17 @@ describe('BugReport', function () {
       expect(report.actualResult).to.equal('Something bad')
       expect(report.additionalInformation.text).to.equal('Something helpful')
       expect(report.additionalInformation.packageList).to.deep.equal(report.packageList)
+    })
+
+    it('adds a test package name when in dev mode', function () {
+      devModeStub.returns(true)
+
+      report = new BugReport()
+
+      const packages = atom.packages.getAvailablePackageNames()
+      packages.push('test-creating-issues-here')
+
+      expect(report.packageList).to.deep.equal(packages)
     })
   })
 

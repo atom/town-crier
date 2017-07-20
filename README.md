@@ -15,6 +15,10 @@ Execute any of the commands by opening the [Command Palette](http://flight-manua
 
 * **Town Crier: Create Bug** &mdash; Opens a new bug report
 
+## Testing
+
+When testing the issue creation flow, it is useful to direct the creation of new issues to a test repository so as to not create noise in normal package repositories. When in [Dev Mode](http://flight-manual.atom.io/hacking-atom/sections/contributing-to-official-atom-packages/#running-in-development-mode) town-crier will add a special package name to the list of available packages: `test-creating-issues-here`. This package will direct issues creation to the repo at `https://github.com/${process.env.TOWN_CRIER_TEST_REPO}/`.
+
 ## License
 
 [MIT](LICENSE.md)
