@@ -22,7 +22,8 @@
   },
   "devDependencies": {
     "atom-mocha-test-runner": "^1.0.1",
-    "chai": "^4.0.2"
+    "chai": "^4.0.2",
+    "sinon": "^2.3.8"
   },
   "atomTestRunner": "./spec/runner",
   "deserializers": {
