@@ -136,19 +136,17 @@ describe('BugReport', function () {
       report = new BugReport()
     })
 
-    it('sets the spinner text and class', function () {
+    it('sets the spinner text', function () {
       report.spin('foo')
 
       expect(report.spinnerText).to.equal('foo')
-      expect(report.spinnerClass).to.equal('inline-block')
     })
 
-    it('clears the spinner text and sets class to hidden when complete', function () {
+    it('clears the spinner text when complete', function () {
       report.spin('foo')
       report.spinComplete()
 
       expect(report.spinnerText).to.equal('')
-      expect(report.spinnerClass).to.equal('inline-block hidden')
     })
   })
 
