@@ -1,7 +1,7 @@
 {
   "name": "town-crier",
   "main": "./lib/main",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "A simple way to submit feedback to Atom or any package",
   "keywords": [
     "bug",
