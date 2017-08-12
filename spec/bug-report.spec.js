@@ -34,8 +34,7 @@ describe('BugReport', function () {
       expect(report.apmVersion).to.equal('')
       expect(report.osVersion).to.equal('')
       expect(report.packageList).to.deep.equal(atom.packages.getAvailablePackageNames())
-      expect(report.additionalInformation.text).to.equal('')
-      expect(report.additionalInformation.packageList).to.deep.equal(report.packageList)
+      expect(report.additionalInformation).to.equal('')
     })
 
     it('copies the values to the fields when deserializing', function () {
@@ -46,9 +45,7 @@ describe('BugReport', function () {
         reproSteps: ['foo', 'bar', 'baz'],
         expectedResult: 'Nothing bad',
         actualResult: 'Something bad',
-        additionalInformation: {
-          text: 'Something helpful'
-        }
+        additionalInformation: 'Something helpful'
       })
 
       expect(report.title).to.equal('foo')
@@ -57,8 +54,7 @@ describe('BugReport', function () {
       expect(report.reproSteps).to.deep.equal(['foo', 'bar', 'baz'])
       expect(report.expectedResult).to.equal('Nothing bad')
       expect(report.actualResult).to.equal('Something bad')
-      expect(report.additionalInformation.text).to.equal('Something helpful')
-      expect(report.additionalInformation.packageList).to.deep.equal(report.packageList)
+      expect(report.additionalInformation).to.equal('Something helpful')
     })
 
     it('adds a test package name when in dev mode', function () {
@@ -202,12 +198,8 @@ describe('BugReport', function () {
           expect(rendered).to.match(/\*\*Actual:\*\* None entered/)
         })
 
-        it('has only whitespace between the additional information header and the first details section', function () {
-          expect(rendered).to.match(/## Additional Info\s+<details>/)
-        })
-
-        it('contains the installed packages section', function () {
-          expect(rendered).to.match(/<summary>Installed Packages<\/summary>/)
+        it('has only whitespace between the additional information header and the optional information section', function () {
+          expect(rendered).to.match(/## Additional Info\s+## Optional Information/)
         })
 
         it('contains the town-crier version comment', function () {
@@ -240,12 +232,8 @@ describe('BugReport', function () {
           expect(rendered).to.match(/\*\*Actual:\*\* None entered/)
         })
 
-        it('has only whitespace between the additional information header and the first details section', function () {
-          expect(rendered).to.match(/## Additional Info\s+<details>/)
-        })
-
-        it('contains the installed packages section', function () {
-          expect(rendered).to.match(/<summary>Installed Packages<\/summary>/)
+        it('has only whitespace between the additional information header and the optional information section', function () {
+          expect(rendered).to.match(/## Additional Info\s+## Optional Information/)
         })
 
         it('contains the town-crier version comment', function () {
@@ -263,10 +251,7 @@ describe('BugReport', function () {
           expectedResult: 'Expected',
           actualResult: 'Actual',
           reproSteps: ['one', 'two', 'three'],
-          additionalInformation: {
-            text: 'Additional information',
-            packageList: []
-          }
+          additionalInformation: 'Additional information'
         })
       })
 
@@ -291,12 +276,8 @@ describe('BugReport', function () {
           expect(rendered).to.match(/\*\*Actual:\*\* Actual/)
         })
 
-        it('has the proper text between the additional information header and the first details section', function () {
-          expect(rendered).to.match(/## Additional Info\s+Additional information\s+<details>/)
-        })
-
-        it('contains the installed packages section', function () {
-          expect(rendered).to.match(/<summary>Installed Packages<\/summary>/)
+        it('has the proper text between the additional information header and the optional information section', function () {
+          expect(rendered).to.match(/## Additional Info\s+Additional information\s+## Optional/)
         })
 
         it('contains the town-crier version comment', function () {
@@ -333,12 +314,8 @@ describe('BugReport', function () {
           expect(rendered).to.match(/\*\*Actual:\*\* Actual/)
         })
 
-        it('has the proper text between the additional information header and the first details section', function () {
-          expect(rendered).to.match(/## Additional Info\s+Additional information\s+<details>/)
-        })
-
-        it('contains the installed packages section', function () {
-          expect(rendered).to.match(/<summary>Installed Packages<\/summary>/)
+        it('has the proper text between the additional information header and the optional information section', function () {
+          expect(rendered).to.match(/## Additional Info\s+Additional information\s+## Optional Information/)
         })
 
         it('contains the town-crier version comment', function () {
