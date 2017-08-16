@@ -1,7 +1,7 @@
 @import "ui-variables";
 
 .town-crier {
-  padding: 10px;
+  padding: @component-padding;
 
   h1 {
     margin-top: 0px;
@@ -23,6 +23,16 @@
 
   .hidden {
     display: none;
+  }
+
+  .optional-information {
+    label {
+      font-weight: normal;
+    }
+
+    .input-checkbox {
+      margin-right: @component-icon-padding;
+    }
   }
 
   .required {
