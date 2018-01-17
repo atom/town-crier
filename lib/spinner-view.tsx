@@ -1,10 +1,15 @@
-/** @babel */
-/** @jsx etch.dom */
-
 import etch from 'etch'
 
+interface SpinnerViewProps {
+  className: string
+  text: string
+}
+
 export default class SpinnerView {
-  constructor (props) {
+  private className: string
+  private props: SpinnerViewProps
+
+  constructor (props: SpinnerViewProps) {
     this.props = props
 
     this.setClassName()
@@ -21,7 +26,7 @@ export default class SpinnerView {
     )
   }
 
-  update (props) {
+  update (props: SpinnerViewProps) {
     this.props = props
 
     this.setClassName()
