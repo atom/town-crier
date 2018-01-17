@@ -1,10 +1,14 @@
-/** @babel */
-/** @jsx etch.dom */
-
 import etch from 'etch'
 
+export interface VersionViewProps {
+  label: string
+  version: string
+}
+
 export default class VersionView {
-  constructor (props) {
+  private props: VersionViewProps
+
+  constructor (props: VersionViewProps) {
     this.props = props
 
     etch.initialize(this)
@@ -21,7 +25,7 @@ export default class VersionView {
     )
   }
 
-  update (props) {
+  update (props: VersionViewProps) {
     this.props = props
 
     return etch.update(this)
