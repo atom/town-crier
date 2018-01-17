@@ -1,14 +1,28 @@
-/** @babel */
+import * as https from 'https'
+import * as url from 'url'
 
-import https from 'https'
-import url from 'url'
+/**
+ * Response from the package details Atom API call.
+ *
+ * See http://flight-manual.atom.io/atom-server-side-apis/sections/atom-package-server-api/#showing-package-details
+ */
+interface PackageResponse {
+  name: string
+  repository: {
+    type: string
+    url: string
+  }
+}
 
 export default class AtomApi {
-  async getPackageRepo (packageName) {
+  /**
+   * Gets the repository URL for the given package name.
+   */
+  public async getPackageRepo (packageName: string): Promise<string> {
     let options = url.parse(`https://atom.io/api/packages/${packageName}`)
     options = Object.assign(options, {headers: {"Accept": "application/json"}})
 
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve: (repo: string) => void, reject) => {
       https.get(options, (response) => {
         let body = ''
 
@@ -38,11 +52,11 @@ export default class AtomApi {
     })
   }
 
-  getRepo (obj) {
-    if (obj.repository && typeof obj.repository === 'string') {
-      return obj.repository
-    } else if (obj.repository.url && typeof obj.repository.url === 'string') {
-      return obj.repository.url
+  private getRepo (response: PackageResponse): string | undefined {
+    if (response.repository && typeof response.repository === 'string') {
+      return response.repository
+    } else if (response.repository.url && typeof response.repository.url === 'string') {
+      return response.repository.url
     }
   }
 }
