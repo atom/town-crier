@@ -1,16 +1,28 @@
-/** @babel */
+import * as _ from 'underscore-plus'
 
-import _ from 'underscore-plus'
+interface OptionalInformationMap {
+  [key: string]: OptionalInformationBlock
+}
+
+interface OptionalInformationBlock {
+  description?: string
+  data: StringOrStrings
+  include: boolean
+}
+
+type StringOrStrings = string | string[]
 
 /**
  * Keeps track of optional information and whether to include it in the issue to be filed.
  */
 export default class OptionalInformation {
+  private info: OptionalInformationMap
+
   constructor () {
     this.info = {}
   }
 
-  getDescription (type) {
+  getDescription (type: string) {
     if (this.info[type] && this.info[type].description) {
       return this.info[type].description
     }
@@ -41,7 +53,7 @@ export default class OptionalInformation {
    * @param {String} type Name of the information type
    * @return Information associated with the name
    */
-  getInfo (type) {
+  getInfo (type: string) {
     return this.info[type]
   }
 
@@ -54,12 +66,14 @@ export default class OptionalInformation {
     return Object.keys(this.info)
   }
 
-  renderData (type) {
+  renderData (type: string) {
     if (this.info[type] && this.info[type].data) {
-      if (Array.isArray(this.info[type].data)) {
-        return this.info[type].data.reduce((acc, val) => { return acc + `* ${val}\n` }, '')
+      let data = this.info[type].data
+
+      if (data instanceof Array) {
+        return data.reduce((acc, val) => { return acc + `* ${val}\n` }, '')
       } else {
-        return this.info[type].data
+        return data
       }
     } else {
       return ''
@@ -72,7 +86,7 @@ export default class OptionalInformation {
    * @param {String} type Name of the information type
    * @param {Boolean} include Flag indicating whether to include the information type in the issue
    */
-  setInclude (type, include) {
+  setInclude (type: string, include: boolean) {
     this.info[type].include = include
   }
 
@@ -82,7 +96,7 @@ export default class OptionalInformation {
    * @param {String} type Name of the information
    * @param [data=null] The information
    */
-  setInfo (type, data = null, {description} = {}) {
+  setInfo (type: string, data: any = null, {description} = {description: undefined}) {
     this.info[type] = { data, description, include: true }
   }
 }
