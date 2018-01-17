@@ -14,19 +14,47 @@
     "atom": ">=1.19.0 <2.0.0"
   },
   "dependencies": {
+    "@types/atom": "^1.23.0",
+    "@types/keytar": "^4.0.1",
+    "@types/node": "^8.5.2",
+    "@types/temp": "^0.8.31",
+    "atom-ts-transpiler": "^1.4.0",
     "etch": "^0.12.4",
     "github": "^9.2.0",
     "keytar": "^4.0.3",
     "temp": "^0.8.3",
+    "typescript": "^2.6.2",
     "underscore-plus": "^1.6.6"
   },
   "devDependencies": {
-    "atom-mocha-test-runner": "^1.0.1",
-    "chai": "^4.0.2",
+    "@types/atom-mocha-test-runner": "^1.0.2",
+    "@types/chai": "^4.0.10",
+    "atom-mocha-test-runner": "^1.2.0",
+    "atom-transpiler-debug-tool": "^1.0.3",
+    "chai": "^4.1.2",
     "sinon": "^2.3.8"
   },
   "atomTestRunner": "./spec/runner",
+  "atomTranspilers": [
+    {
+      "transpiler": "atom-ts-transpiler",
+      "glob": "{!(node_modules)/**/,}*.ts?(x)",
+      "options": {
+        "compilerOptions": {
+          "target": "ES2016",
+          "module": "commonjs",
+          "strict": true,
+          "moduleResolution": "node"
+        },
+        "cacheKeyFiles": [],
+        "verbose": false
+      }
+    }
+  ],
   "deserializers": {
     "BugReport": "deserializeBugReport"
+  },
+  "scripts": {
+    "debug": "atom-transpiler-debug-tool"
   }
 }

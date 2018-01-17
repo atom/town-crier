@@ -1,10 +1,17 @@
-/** @babel */
-/** @jsx etch.dom */
-
 import etch from 'etch'
 
-export default class PackageSelectListView {
-  constructor ({report}) {
+interface PackageSelectListProps {
+  report: ReportProps
+}
+
+interface ReportProps {
+  forPackage: string
+}
+
+export default class PackageSelectListView implements Etchable<PackageSelectListProps> {
+  private report: ReportProps
+
+  constructor ({report}: PackageSelectListProps) {
     this.report = report
 
     etch.initialize(this)
@@ -24,12 +31,12 @@ export default class PackageSelectListView {
             selected={this.report.forPackage === 'atom'}/>
           <option disabled>────────────────────</option>
           {
-            this.report.packageList.map((package) => {
+            this.report.packageList.map((packageName) => {
               return (
                 <option
-                  label={package}
-                  value={package}
-                  selected={package === this.report.forPackage}/>
+                  label={packageName}
+                  value={packageName}
+                  selected={packageName === this.report.forPackage}/>
               )
             })
           }
@@ -38,7 +45,7 @@ export default class PackageSelectListView {
     )
   }
 
-  update ({report}) {
+  update ({report}: PackageSelectListProps) {
     this.report = report
 
     return etch.update(this)

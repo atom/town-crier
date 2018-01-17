@@ -1,10 +1,15 @@
-/** @babel */
-/** @jsx etch.dom */
-
 import etch from 'etch'
 
-export default class SpinnerView {
-  constructor (props) {
+interface SpinnerViewProps {
+  className: string
+  text: string
+}
+
+export default class SpinnerView implements Etchable<SpinnerViewProps> {
+  private className: string
+  private props: SpinnerViewProps
+
+  public constructor(props: SpinnerViewProps) {
     this.props = props
 
     this.setClassName()
@@ -12,16 +17,16 @@ export default class SpinnerView {
     etch.initialize(this)
   }
 
-  render () {
+  public render() {
     return (
       <div className={this.className}>
-        <span class='loading loading-spinner-tiny inline-block'></span>
+        <span className='loading loading-spinner-tiny inline-block'></span>
         <span>{this.props.text}</span>
       </div>
     )
   }
 
-  update (props) {
+  public update(props: SpinnerViewProps) {
     this.props = props
 
     this.setClassName()
@@ -29,11 +34,11 @@ export default class SpinnerView {
     return etch.update(this)
   }
 
-  destroy () {
+  public destroy() {
     etch.destroy(this)
   }
 
-  setClassName () {
+  private setClassName(): void {
     if (this.props.text && this.props.text.length > 0) {
       this.className = `spinner-view ${this.props.className}`
     } else {

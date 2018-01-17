@@ -1,21 +1,55 @@
-/** @babel */
-
 import {CompositeDisposable, Emitter} from 'atom'
-import fs from 'fs'
-import keytar from 'keytar'
-import temp from 'temp'
+import * as fs from 'fs'
+import * as keytar from 'keytar'
+import * as temp from 'temp'
 
 import AtomApi from './atom-api'
 import BugReportView from './bug-report-view'
 import OptionalInformation from './optional-information'
 import {getApmVersion, getAtomVersion, getOsVersion} from './version-helpers'
 
+interface SerializedBugReport {
+  data: SerializedBugReportData
+  deserializer: string
+}
+
+interface SerializedBugReportData {
+  actualResult?: string
+  additionalInformation?: string
+  apmVersion?: string
+  atomVersion?: string
+  description?: string
+  expectedResult?: string
+  forPackage?: string
+  osVersion?: string
+  reproSteps?: string[]
+  title?: string
+}
+
 const GitHubApi = require('github')
 
 const packageMetadata = require('../package.json')
 
 export default class BugReport {
-  constructor (data = {}) {
+  private actualResult: string
+  private additionalInformation: string
+  private apmVersion: string
+  private atomVersion: string
+  private description: string
+  private emitter: Emitter
+  private expectedResult: string
+  private forPackage: string
+  private packageList: string[]
+  private optionalInformation: OptionalInformation
+  private osVersion: string
+  private previewFile: string
+  private reportView: BugReportView
+  private reproSteps: string[]
+  private spinnerText: string
+  private subscriptions: CompositeDisposable
+  private title: string
+
+  public constructor(data: SerializedBugReportData = {}) {
     this.title = data.title || ''
     this.description = data.description || ''
     this.forPackage = data.forPackage || ''
@@ -45,11 +79,11 @@ export default class BugReport {
     }
   }
 
-  get element () {
+  public get element(): HTMLElement {
     return this.view.element
   }
 
-  get view () {
+  public get view(): BugReportView {
     if (!this.reportView) {
       this.reportView = new BugReportView(this)
     }
@@ -57,7 +91,7 @@ export default class BugReport {
     return this.reportView
   }
 
-  serialize () {
+  public serialize(): SerializedBugReport {
     return {
       deserializer: 'BugReport',
       data: {
@@ -72,23 +106,23 @@ export default class BugReport {
     }
   }
 
-  onDidDestroy (callback) {
+  public onDidDestroy(callback: () => void) {
     return this.emitter.on('did-destroy', callback)
   }
 
-  addReproStep () {
+  public addReproStep(): void {
     this.reproSteps.push('')
 
     this.view.update(this)
   }
 
-  removeReproStep (index) {
+  public removeReproStep(index: number): void {
     this.reproSteps.splice(index, 1)
 
     this.view.update(this)
   }
 
-  destroy () {
+  public destroy(): void {
     if (this.previewFile) {
       fs.unlink(this.previewFile, (err) => {
         if (err) {
@@ -100,25 +134,25 @@ export default class BugReport {
     this.emitter.emit('did-destroy')
   }
 
-  getTitle () {
+  private getTitle(): string {
     return 'Bug Report'
   }
 
-  getURI () {
+  private getURI(): string {
     return 'atom://bug-report'
   }
 
-  getIconName () {
+  private getIconName(): string {
     return 'bug'
   }
 
-  isValid () {
+  private isValid(): boolean {
     const isValid = this.title.trim().length > 0 && this.description.trim().length > 0 && this.forPackage.length > 0 && this.osVersion.trim().length > 0
 
     return isValid
   }
 
-  async populateVersions () {
+  private async populateVersions(): Promise<void> {
     return Promise.all([getAtomVersion(), getApmVersion(), getOsVersion()]).then(values => {
       this.atomVersion = values[0]
       this.apmVersion = values[1]
@@ -128,7 +162,7 @@ export default class BugReport {
     })
   }
 
-  preview () {
+  private preview(): void {
     if (!this.previewFile) {
       this.previewFile = temp.path({suffix: '.md'})
     }
@@ -136,19 +170,19 @@ export default class BugReport {
     this.updatePreview(true)
   }
 
-  spin (text) {
+  private spin(text: string): void {
     this.spinnerText = text
 
     this.view.update(this)
   }
 
-  spinComplete () {
+  private spinComplete(): void {
     this.spinnerText = ''
 
     this.view.update(this)
   }
 
-  renderReport ({withHeader} = {withHeader: false}) {
+  private renderReport({withHeader} = {withHeader: false}): string {
     const reproSteps = this.reproSteps.filter((step) => { return (step && step.length > 0) })
                                       .map((step) => { return `1. ${step}` })
                                       .join('\n')
@@ -202,7 +236,7 @@ ${this.renderOptionalInformation()}
     `
   }
 
-  renderOptionalInformation () {
+  private renderOptionalInformation(): string | undefined {
     if (this.optionalInformation.getIncludeTypes().length > 0) {
       let blocks = ''
 
@@ -223,7 +257,7 @@ ${blocks}
     }
   }
 
-  async submit () {
+  async submit(): Promise<void> {
     try {
       let owner, repo, repoUrl
 
@@ -265,7 +299,7 @@ ${blocks}
     }
   }
 
-  updatePreview (activateItem = false) {
+  private updatePreview(activateItem = false): void {
     if (this.previewFile) {
       fs.writeFile(this.previewFile, this.renderReport({withHeader: true}), (err) => {
         if (err) {

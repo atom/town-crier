@@ -1,16 +1,20 @@
-/** @babel */
-/** @jsx etch.dom */
-
 import etch from 'etch'
 
-export default class VersionView {
-  constructor (props) {
+export interface VersionViewProps {
+  label: string
+  version: string
+}
+
+export default class VersionView implements Etchable<any> {
+  private props: VersionViewProps
+
+  public constructor(props: VersionViewProps) {
     this.props = props
 
     etch.initialize(this)
   }
 
-  render () {
+  public render() {
     return (
       <div className='version-view block'>
         <label>{this.props.label}</label>
@@ -21,13 +25,13 @@ export default class VersionView {
     )
   }
 
-  update (props) {
+  public update(props: VersionViewProps) {
     this.props = props
 
     return etch.update(this)
   }
 
-  destroy () {
+  public destroy() {
     etch.destroy(this)
   }
 }
