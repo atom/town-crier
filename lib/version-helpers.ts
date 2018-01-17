@@ -1,10 +1,18 @@
-/** @babel */
-
-import os from 'os'
+import * as os from 'os'
 
 import {BufferedProcess} from 'atom'
 
-function linuxVersionInfo () {
+interface LinuxVersionInfo {
+  distroName?: string
+  distroVersion?: string
+}
+
+interface MacVersionInfo {
+  productName?: string
+  productVersion?: string
+}
+
+function linuxVersionInfo (): Promise<LinuxVersionInfo> {
   return new Promise((resolve, reject) => {
     let stdout = ''
 
@@ -13,8 +21,8 @@ function linuxVersionInfo () {
       args: ['-ds'],
       stdout: (output) => { stdout += output },
       exit: (exitCode) => {
-        [DistroName, DistroVersion] = stdout.trim().split(' ')
-        resolve({DistroName, DistroVersion})
+        let [distroName, distroVersion] = stdout.trim().split(' ')
+        resolve({distroName, distroVersion})
       }
     })
 
@@ -27,15 +35,15 @@ function linuxVersionInfo () {
 
 function linuxVersionText () {
   return linuxVersionInfo().then((info) => {
-    if (info.DistroName && info.DistroVersion) {
-      return `${info.DistroName} ${info.DistroVersion}`
+    if (info.distroName && info.distroVersion) {
+      return `${info.distroName} ${info.distroVersion}`
     } else {
       return `${os.platform()} ${os.release()}`
     }
   })
 }
 
-function macVersionInfo () {
+function macVersionInfo (): Promise<MacVersionInfo> {
   return new Promise((resolve, reject) => {
     let stdout = ''
     const plistBuddy = new BufferedProcess({
@@ -49,8 +57,8 @@ function macVersionInfo () {
       ],
       stdout: (output) => { stdout += output },
       exit: () => {
-        [ProductVersion, ProductName] = stdout.trim().split('\n')
-        return resolve({ProductVersion, ProductName})
+        let [productVersion, productName] = stdout.trim().split('\n')
+        return resolve({productVersion, productName})
       }
     })
 
@@ -63,8 +71,8 @@ function macVersionInfo () {
 
 function macVersionText () {
   return macVersionInfo().then((info) => {
-    if (info.ProductName && info.ProductVersion) {
-      return `${info.ProductName} ${info.ProductVersion}`
+    if (info.productName && info.productVersion) {
+      return `${info.productName} ${info.productVersion}`
     } else {
       return 'Unknown macOS version'
     }
@@ -73,14 +81,16 @@ function macVersionText () {
 
 function winVersionText () {
   return new Promise((resolve, reject) => {
-    let data = []
+    let data: string[] = []
+
     const systemInfo = new BufferedProcess({
       command: 'systeminfo',
       stdout: (oneLine) => { data.push(oneLine) },
       exit: () => {
-        info = data.join('\n')
+        let info = data.join('\n')
+        let res = /OS.Name.\s+(.*)$/im.exec(info)
 
-        if (res = /OS.Name.\s+(.*)$/im.exec(info)) {
+        if (res) {
           info = res[1]
         } else {
           info = 'Unknown Windows version'
