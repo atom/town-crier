@@ -26,24 +26,24 @@ interface SerializedBugReportData {
 }
 
 export default class BugReport {
-  private actualResult: string
-  private additionalInformation: string
-  private apmVersion: string
-  private atomVersion: string
-  private description: string
   private emitter: Emitter
-  private expectedResult: string
-  private optionalInformation: OptionalInformation
-  private osVersion: string
-  private reproSteps: string[]
-  private spinnerText: string
   private subscriptions: CompositeDisposable
-  private title: string
   private reportView: BugReportView
   private previewFile: string
 
+  public reproSteps: string[]
+  public spinnerText: string
+  public additionalInformation: string
+  public optionalInformation: OptionalInformation
+  public apmVersion: string
+  public atomVersion: string
+  public osVersion: string
+  public actualResult: string
+  public expectedResult: string
+  public description: string
   public forPackage: string
   public packageList: string[]
+  public title: string
 
   constructor (data: SerializedBugReportData = {}) {
     this.title = data.title || ''

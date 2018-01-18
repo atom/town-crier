@@ -1,14 +1,18 @@
-/** @babel */
-/** @jsx etch.dom */
-
+import {Disposable} from 'atom'
 import etch from 'etch'
 
+import BugReport from './bug-report'
 import PackageSelectListView from './package-select-list-view'
 import SpinnerView from './spinner-view'
 import VersionView from './version-view'
 
 export default class BugReportView {
-  constructor (report) {
+  private disposable: Disposable
+  private report: BugReport
+  private tabOrder: string[]
+  private valid: boolean
+
+  constructor (report: BugReport) {
     this.report = report
 
     this.disposable = atom.commands.add('.town-crier.bug-report-view', {
@@ -157,7 +161,7 @@ export default class BugReportView {
     )
   }
 
-  update (report) {
+  update (report: BugReport) {
     this.report = report
     this.tabOrder = this.createTabOrder()
     this.valid = this.report.isValid()
