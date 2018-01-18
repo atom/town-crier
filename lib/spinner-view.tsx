@@ -20,7 +20,7 @@ export default class SpinnerView {
   render () {
     return (
       <div className={this.className}>
-        <span class='loading loading-spinner-tiny inline-block'></span>
+        <span className='loading loading-spinner-tiny inline-block'></span>
         <span>{this.props.text}</span>
       </div>
     )
