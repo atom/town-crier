@@ -33,7 +33,7 @@ function linuxVersionInfo (): Promise<LinuxVersionInfo> {
   })
 }
 
-function linuxVersionText () {
+function linuxVersionText (): Promise<string> {
   return linuxVersionInfo().then((info) => {
     if (info.distroName && info.distroVersion) {
       return `${info.distroName} ${info.distroVersion}`
@@ -69,7 +69,7 @@ function macVersionInfo (): Promise<MacVersionInfo> {
   })
 }
 
-function macVersionText () {
+function macVersionText (): Promise<string> {
   return macVersionInfo().then((info) => {
     if (info.productName && info.productVersion) {
       return `${info.productName} ${info.productVersion}`
@@ -79,7 +79,7 @@ function macVersionText () {
   })
 }
 
-function winVersionText () {
+function winVersionText (): Promise<string> {
   return new Promise((resolve, reject) => {
     let data: string[] = []
 
@@ -107,8 +107,8 @@ function winVersionText () {
   })
 }
 
-module.exports.getApmVersion = async function () {
-  return new Promise((resolve, reject) => {
+export async function getApmVersion(): Promise<string> {
+  return new Promise((resolve: (value: string) => void, reject) => {
     let stdout = ''
     const apmVersion = new BufferedProcess({
       command: atom.packages.getApmPath(),
@@ -126,26 +126,24 @@ module.exports.getApmVersion = async function () {
   })
 }
 
-module.exports.getAtomVersion = async function () {
-  return new Promise((resolve, reject) => {
+export async function getAtomVersion(): Promise<string> {
+  return new Promise((resolve: (value: string) => void, reject) => {
     resolve(`Atom: ${atom.getVersion()}\nElectron: ${process.versions['atom-shell']}\nChrome: ${process.versions.chrome}\nNode: ${process.versions.node}`)
   })
 }
 
-module.exports.getOsVersion = async function () {
-  return new Promise((resolve, reject) => {
-    switch (os.platform()) {
-      case 'darwin':
-        return resolve(macVersionText())
+export async function getOsVersion(): Promise<string> {
+  switch (os.platform()) {
+    case 'darwin':
+      return await macVersionText()
 
-      case 'win32':
-        return resolve(winVersionText())
+    case 'win32':
+      return await winVersionText()
 
-      case 'linux':
-        return resolve(linuxVersionText())
+    case 'linux':
+      return await linuxVersionText()
 
-      default:
-        return resolve(`${os.platform()} ${os.release()}`)
-    }
-  })
+    default:
+      return `${os.platform()} ${os.release()}`
+  }
 }

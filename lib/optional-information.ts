@@ -5,7 +5,7 @@ interface OptionalInformationMap {
 }
 
 interface OptionalInformationBlock {
-  description?: string
+  description: string | undefined
   data: StringOrStrings
   include: boolean
 }
@@ -96,7 +96,7 @@ export default class OptionalInformation {
    * @param {String} type Name of the information
    * @param [data=null] The information
    */
-  setInfo (type: string, data: any = null, {description} = {description: undefined}) {
+  setInfo (type: string, data: any = null, {description}: {description?: string} = {}) {
     this.info[type] = { data, description, include: true }
   }
 }

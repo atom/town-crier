@@ -1,9 +1,7 @@
-/** @babel */
-
 import {CompositeDisposable, Emitter} from 'atom'
-import fs from 'fs'
-import keytar from 'keytar'
-import temp from 'temp'
+import * as fs from 'fs'
+import * as keytar from 'keytar'
+import * as temp from 'temp'
 
 import AtomApi from './atom-api'
 import BugReportView from './bug-report-view'
@@ -14,8 +12,40 @@ const GitHubApi = require('github')
 
 const packageMetadata = require('../package.json')
 
+interface SerializedBugReportData {
+  actualResult?: string
+  description?: string
+  expectedResult?: string
+  forPackage?: string
+  reproSteps?: string[]
+  title?: string
+  atomVersion?: string
+  apmVersion?: string
+  osVersion?: string
+  additionalInformation?: string
+}
+
 export default class BugReport {
-  constructor (data = {}) {
+  private actualResult: string
+  private additionalInformation: string
+  private apmVersion: string
+  private atomVersion: string
+  private description: string
+  private emitter: Emitter
+  private expectedResult: string
+  private optionalInformation: OptionalInformation
+  private osVersion: string
+  private reproSteps: string[]
+  private spinnerText: string
+  private subscriptions: CompositeDisposable
+  private title: string
+  private reportView: BugReportView
+  private previewFile: string
+
+  public forPackage: string
+  public packageList: string[]
+
+  constructor (data: SerializedBugReportData = {}) {
     this.title = data.title || ''
     this.description = data.description || ''
     this.forPackage = data.forPackage || ''
@@ -72,7 +102,7 @@ export default class BugReport {
     }
   }
 
-  onDidDestroy (callback) {
+  onDidDestroy (callback: () => void) {
     return this.emitter.on('did-destroy', callback)
   }
 
@@ -82,7 +112,7 @@ export default class BugReport {
     this.view.update(this)
   }
 
-  removeReproStep (index) {
+  removeReproStep (index: number) {
     this.reproSteps.splice(index, 1)
 
     this.view.update(this)
@@ -136,7 +166,7 @@ export default class BugReport {
     this.updatePreview(true)
   }
 
-  spin (text) {
+  spin (text: string) {
     this.spinnerText = text
 
     this.view.update(this)
